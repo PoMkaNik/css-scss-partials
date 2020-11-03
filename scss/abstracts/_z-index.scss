@@ -1,0 +1,26 @@
+/// z-index generator
+/// z-index layouts
+$layer: (
+  offcanvas: 1,
+  dropdown: 10,
+  tooltip: 15,
+  lightbox: 500,
+);
+
+/// function to get z-index based on layer
+@function layer($name) {
+  @if map-has-key($layer, $name) {
+    @return map-get($layer, $name);
+  }
+
+  @warn "The key #{$name} is not in the map ’$layer’";
+  @return null;
+}
+
+/// example
+.m-modal {
+  z-index: layer(modal); // warning - modal not in $layer
+}
+.m-lightbox {
+  z-index: layer(lightbox);
+}

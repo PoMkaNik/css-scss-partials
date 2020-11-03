@@ -1,0 +1,12 @@
+/// icons from map generator with several properties
+
+$icons: (('eye' '\f112' 12px), ('start' '\f12e' 16px), ('stop' '\f12f' 10px));
+
+@each $name, $glyph, $size in $icons {
+  .icon-#{$name}:before {
+    display: inline-block;
+    font-family: 'Icon Font';
+    content: $glyph;
+    font-size: $size;
+  }
+}

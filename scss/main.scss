@@ -1,0 +1,24 @@
+@import 'abstracts/utilities';
+@import 'layout/index';
+@import 'layout/navigation';
+@import 'components/cards';
+@import 'components/video-bg';
+@import 'components/cards2';
+
+.heading-1 {
+  color: white;
+  text-transform: uppercase;
+  font-size: 4rem;
+  word-spacing: 0.3rem;
+  letter-spacing: 0.2rem;
+  text-align: center;
+}
+
+.heading-3 {
+  color: white;
+  font-size: 2rem;
+}
+
+.text-black {
+  color: #000;
+}

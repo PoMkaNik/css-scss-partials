@@ -1,0 +1,33 @@
+/// Margin & padding classes generator
+$spaceAmounts: (0, 1, 2, 3, 4, 5);
+$unit: 1rem;
+
+@each $space in $spaceAmounts {
+  .m-#{$space} {
+    margin: $space * $unit;
+  }
+
+  .my-#{$space} {
+    margin-top: $space * $unit;
+    margin-bottom: $space * $unit;
+  }
+
+  .mx-#{$space} {
+    margin-right: $space * $unit;
+    margin-left: $space * $unit;
+  }
+
+  .p-#{$space} {
+    padding: $space * $unit;
+  }
+
+  .py-#{$space} {
+    padding-top: $space * $unit;
+    padding-bottom: $space * $unit;
+  }
+
+  .px-#{$space} {
+    padding-right: $space * $unit;
+    padding-left: $space * $unit;
+  }
+}

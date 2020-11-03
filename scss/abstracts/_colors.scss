@@ -1,0 +1,90 @@
+/// Scheme of colors
+/* color schemes */
+$colorScheme: (
+  gray: (
+    // default
+    base: #ccc,
+    light: #f2f2f2,
+    dark: #666,
+  ),
+  brown: (
+    // default
+    base: #ab906b,
+    light: #ecdac3,
+    dark: #5e421c,
+  ),
+);
+
+/// Function for shorter usage of map-get();
+@function setColor($scheme, $tone: base) {
+  @return map-get(map-get($colorScheme, $scheme), $tone);
+}
+
+.element {
+  color: setColor(brown); // #ab906b
+
+  &--light {
+    color: setColor(brown, light); // #ecdac3
+  }
+}
+
+/// or just colors
+$colors: (
+  sexy: #fa6acc,
+  glamour: #f02a52,
+  sky: #09a6e4,
+);
+
+/// function to get colors easy
+@function color($key) {
+  @if map-has-key($colors, $key) {
+    @return map-get($colors, $key);
+  }
+
+  @warn "Unknown `#{$key}` in $colors.";
+  @return null;
+}
+
+.element {
+  background-color: color(sky); // #09A6E4
+}
+
+/// Slightly lighten a color
+/// @access public
+/// @param {Color} $color - color to tint
+/// @param {Number} $percentage - percentage of `$color` in returned color
+/// @return {Color}
+
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+/// Slightly darken a color
+/// @access public
+/// @param {Color} $color - color to shade
+/// @param {Number} $percentage - percentage of `$color` in returned color
+/// @return {Color}
+
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}
+
+/// Set text color based on bg
+/// @param {Color} $color - background color
+/// @return {Color}
+
+@function set-text-color($color) {
+  @if (lightness($color) > 70) {
+    @return #333;
+  } @else {
+    @return #fff;
+  }
+}
+
+/// Set background & text color
+/// @param {Color} $color - background color
+
+@mixin bg-text-colors($color) {
+  background-color: $color;
+  color: set-text-color($color);
+}

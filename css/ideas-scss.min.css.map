@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAwGM,AAAA,aAAa,CAHnB,SAAS,AAGqB,CAKtB,UAAU,CAlBF,OAAO,CAmBf,KAAK,CAlBF,IAAI,CAmBR,AAPD,AAAA,YAAY,CAHlB,SAAS,AAGqB,CAKtB,UAAU,CAdF,IAAI,CAeZ,KAAK,CAdF,IAAI,CAeR",
+    "sources": [
+        "../scss/ideas-scss.scss"
+    ],
+    "names": [],
+    "file": "ideas-scss.min.css"
+}

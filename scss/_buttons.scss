@@ -1,0 +1,41 @@
+// in buttons
+$rounded-corners: false;
+
+.button {
+  border: 1px solid black;
+  border-radius: if($rounded-corners, 5px, null);
+}
+
+/// button generation
+/// @param {Map} name: (bg color, text color)
+$buttons: (
+  error: (
+    #d82d2d,
+    #666,
+  ),
+  success: (
+    #52bf4a,
+    #fff,
+  ),
+  warning: (
+    #c23435,
+    #fff,
+  ),
+);
+
+.m-button {
+  display: inline-block;
+  padding: 0.5em;
+  background: #ccc;
+  color: #666;
+
+  @each $name, $colors in $buttons {
+    $bgcolor: nth($colors, 1);
+    $fontcolor: nth($colors, 2);
+
+    &--#{$name} {
+      background-color: $bgcolor;
+      color: $fontcolor;
+    }
+  }
+}

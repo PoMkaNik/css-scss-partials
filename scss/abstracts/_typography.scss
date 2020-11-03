@@ -1,0 +1,19 @@
+/// font properties in map
+$font: (
+  color: #666,
+  family: (
+    Arial,
+    Helvetica,
+  ),
+  size: 62.5%,
+  // 1rem
+  line-height: 1.4,
+);
+
+/// example
+body {
+  color: map-get($font, color);
+  font-family: map-get($font, family);
+  font-size: map-get($font, size);
+  line-height: map-get($font, line-height);
+}

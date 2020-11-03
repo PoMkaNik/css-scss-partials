@@ -1,0 +1,36 @@
+/// @media and breakpoints
+@import 'include-media';
+@import 'include-media-spread';
+
+/// settings
+/// $breakpoints: (phone: 320px, tablet: 768px, desktop: 1024px);
+
+/// .container {
+///  @include media(">phone", "<=tablet") {
+///    width: 50%;
+///    }
+///}
+
+/// example
+$breakpoints: (
+  sm: 30em,
+  md: 768px,
+  lg: 1024px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+.container {
+  @include media('>sm', '<=md') {
+    width: 50%;
+  }
+}
+/// spread - different sizes from $from to $to based on breakpoints
+/// @include spread($css-property, $from, $to)
+$ims-breakpoints: $breakpoints; // required for @include spread(...)
+
+/// example
+.text {
+  @include spread(font-size, 1rem, 2rem);
+  @include spread(padding, 15px, 20px 30px 10px);
+}

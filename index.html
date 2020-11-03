@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" class="theme--light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCSS approaches</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <header>
+    <nav class="nav-main">
+      <span class="nav-main__toggle-btn">
+        <a href="#" onclick="openSideMenu()">
+          <svg width="30" height="30">
+            <path d="M0,5 30,5" stroke="#fff" stroke-width="5" />
+            <path d="M0,14 30,14" stroke="#fff" stroke-width="5" />
+            <path d="M0,23 30,23" stroke="#fff" stroke-width="5" />
+          </svg>
+        </a>
+      </span>
+
+      <ul class="nav-main__items">
+        <li><a href="#" class="nav-main__item">Home</a></li>
+        <li><a href="#" class="nav-main__item">About</a></li>
+        <li><a href="#" class="nav-main__item">Services</a></li>
+        <li><a href="#" class="nav-main__item">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-main__side" id="js--side-menu">
+      <a href="#" class="btn--close" onclick="closeSideMenu()">&times;</a>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section-css-cards">
+      <h1 class="heading-1 my-2">CSS Cards #1</h1>
+      <div class="cards-container">
+        <div class="card card--1 ">
+          <div class="card__image card__image--1">
+          </div>
+          <div class="card__body card__body--1">
+            <span class="date">4 days ago</span>
+            <h2 class="card__header">Post One</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, enim. Obcaecati doloribus quis. Lorem ipsum
+              dolor sit amet consectetur adipisicing elit. Rem, enim. Obcaecati doloribus quis.
+            </p>
+          </div>
+          <div class="card__footer card__footer--1">
+            <div class="stat">
+              <div class="stat__value">4m</div>
+              <div class="stat__type">read</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">539</div>
+              <div class="stat__type">views</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">32</div>
+              <div class="stat__type">comments</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card--2 ">
+          <div class="card__image card__image--2">
+          </div>
+          <div class="card__body card__body--2">
+            <span class="date">6 days ago</span>
+            <h2 class="card__header">Post Two</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, enim. Obcaecati doloribus quis. Lorem ipsum
+              dolor sit amet consectetur adipisicing elit. Rem, enim. Obcaecati doloribus quis.
+            </p>
+          </div>
+          <div class="card__footer card__footer--2">
+            <div class="stat">
+              <div class="stat__value">3m</div>
+              <div class="stat__type">read</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">334</div>
+              <div class="stat__type">views</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">27</div>
+              <div class="stat__type">comments</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card--3 ">
+          <div class="card__image card__image--3">
+          </div>
+          <div class="card__body card__body--3">
+            <span class="date">1 week ago</span>
+            <h2 class="card__header">Post Three</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, enim. Obcaecati doloribus quis. Lorem ipsum
+              dolor sit amet consectetur adipisicing elit. Rem, enim. Obcaecati doloribus quis.
+            </p>
+          </div>
+          <div class="card__footer card__footer--3">
+            <div class="stat">
+              <div class="stat__value">6m</div>
+              <div class="stat__type">read</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">870</div>
+              <div class="stat__type">views</div>
+            </div>
+            <div class="stat">
+              <div class="stat__value">12</div>
+              <div class="stat__type">comments</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-css-cards-2">
+      <h1 class="heading-1 my-2">CSS Cards #2</h1>
+
+      <div class="cards2-container">
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Never forget</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Author</div>
+              Jeff Delaney
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+            <a href="#">web-dev</a>
+          </div>
+        </div>
+
+
+
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Card Tricks are fun!</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Pirate</div>
+              Zheng Zhilong
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+          </div>
+        </div>
+
+
+
+
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Card Tricks are fun!</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Pirate</div>
+              Francis Drake
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+          </div>
+        </div>
+
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Card Tricks are fun!</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Pirate</div>
+              Edward Teach
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+          </div>
+        </div>
+
+
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Card Tricks are fun!</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Pirate</div>
+              William Kidd
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+          </div>
+        </div>
+
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Card Tricks are fun!</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Pirate</div>
+              William Kidd
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+          </div>
+        </div>
+
+        <div class="card2">
+          <header class="card2__header">
+            <p>Sep 15th 2020</p>
+            <h2>Card Tricks are fun!</h2>
+          </header>
+          <div class="card2__body">
+            Card Body
+          </div>
+          <div class="card2__author author">
+            <a href="#">
+              <img class="author__img" src="../img/avatar.jpg" />
+            </a>
+            <svg class="author__half-circle" viewBox="0 0 106 57">
+              <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+            </svg>
+
+            <div class="author__name">
+              <div class="author__name--prefix">Pirate</div>
+              William Kidd
+            </div>
+          </div>
+          <div class="card2__tags">
+            <a href="#">html</a>
+            <a href="#">css</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-video-bg">
+      <div class="video-container">
+        <video src="video/video.mov" autoplay muted loop></video>
+      </div>
+      <div class="content">
+        <h1 class="heading-1">Shoot For The Stars</h1>
+        <h3 class="heading-3">Full screen video landing page</h3>
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>
