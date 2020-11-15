@@ -1,14 +1,12 @@
 /// inline animation
-@mixin inline-animation($duration) {
+@mixin inline-animation($properties...) {
   $name: inline-#{unique-id()};
 
   @keyframes #{$name} {
     @content;
   }
 
-  animation-name: $name;
-  animation-duration: $duration;
-  animation-iteration-count: infinite;
+  animation: #{$name #properties};
 }
 
 /// example
