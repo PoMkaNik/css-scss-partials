@@ -1,0 +1,22 @@
+$max: 16;
+
+@for $i from 1 through $max {
+  $equ: 100% / $i;
+
+  #grid.cell-#{ $i } > div {
+    width: $equ;
+  }
+}
+
+#grid > div {
+  box-sizing: border-box;
+  float: left;
+}
+
+/// html example
+// <body>
+// <div id="grid" class="cell-4">
+// <div></div>
+// <div></div>
+// ...
+// </div>
