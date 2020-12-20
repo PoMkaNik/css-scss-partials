@@ -1,0 +1,549 @@
+@charset 'utf-8';
+
+// list of PSEUDO-elements
+$pseudo-elements: (
+  after,
+  before,
+  cue,
+  first-letter,
+  first-line,
+  selection,
+  slotted,
+  backdrop,
+  placeholder,
+  marker,
+  spelling-error,
+  grammar-error
+);
+
+// list of PSEUDO-classes
+$pseudo-classes: (
+  // pseudo classes with nesting or function
+  // types like `pseudo-class()` NOT supported
+  active,
+  any,
+  any-link,
+  checked,
+  default,
+  defined,
+  // dir(),
+  disabled,
+  empty,
+  enabled,
+  first,
+  first-child,
+  first-of-type,
+  fullscreen,
+  focus,
+  hover,
+  indeterminate,
+  in-range,
+  invalid,
+  // lang(),
+  last-child,
+  last-of-type,
+  left,
+  link,
+  // not(),
+  // nth-child(),
+  // nth-last-child(),
+  // nth-last-of-type(),
+  // nth-of-type(),
+  only-child,
+  only-of-type,
+  optional,
+  out-of-range,
+  read-only,
+  read-write,
+  required,
+  right,
+  root,
+  scope,
+  target,
+  valid,
+  visited
+);
+
+// @mixin - helpers
+@mixin properties-processing($list) {
+  @each $property, $value in $list {
+    @if type_of($value) == map {
+      $pseudo-name: $property;
+      $pseudo-properties: $value;
+      // check if in $pseudo-* lists
+      @if index($pseudo-classes, $pseudo-name) {
+        @include list-processing(
+          $pseudo-name,
+          $pseudo-properties,
+          pseudo-class
+        );
+      } @else if index($pseudo-elements, $pseudo-name) {
+        @include list-processing(
+          $pseudo-name,
+          $pseudo-properties,
+          pseudo-element
+        );
+      } @else {
+        @warn '`#{$pseudo-name}` is not pseudo element/class; will be processed as __element/--modifier; classes in 3rd+ levels nesting is NOT supported';
+        // 3rd lv of elements/modifiers nesting processing
+        @include list-processing($pseudo-name, $pseudo-properties, modifiers);
+      }
+    } @else {
+      #{$property}: $value;
+    }
+  }
+}
+
+@mixin map-processing($first-lvl-el-name, $map, $type) {
+  @if $type == class {
+    @each $modifier-class-name, $modifier-properties in $map {
+      .#{$first-lvl-el-name}#{$modifier-class-name} {
+        @include properties-processing($modifier-properties);
+      }
+    }
+  } @else if $type == modifiers {
+    @each $modifier-class-name, $modifier-properties in $map {
+      &#{$first-lvl-el-name}#{$modifier-class-name} {
+        @include properties-processing($modifier-properties);
+      }
+    }
+  } @else if $type == themes {
+    @each $modifier-class-name, $modifier-properties in $map {
+      .#{$first-lvl-el-name} &#{$modifier-class-name} {
+        @include properties-processing($modifier-properties);
+      }
+    }
+  }
+}
+
+@mixin list-processing($first-lvl-el-name, $list, $type) {
+  @if $type == class {
+    .#{$first-lvl-el-name} {
+      @include properties-processing($list);
+    }
+  } @else if $type == modifiers {
+    &#{$first-lvl-el-name} {
+      @include properties-processing($list);
+    }
+  } @else if $type == themes {
+    .#{$first-lvl-el-name} & {
+      @include properties-processing($list);
+    }
+  } @else if $type == pseudo-class {
+    &:#{$first-lvl-el-name} {
+      @include properties-processing($list);
+    }
+  } @else if $type == pseudo-element {
+    &::#{$first-lvl-el-name} {
+      @include properties-processing($list);
+    }
+  }
+}
+
+@mixin all-types-processing($fst-lvl-el-name, $list, $map, $type) {
+  @if type_of(nth(nth($map, 1), 2)) == map {
+    // nested __elements/--modifiers
+    @include map-processing($fst-lvl-el-name, $map, $type);
+  } @else {
+    // list of css properties
+    @include list-processing($fst-lvl-el-name, $list, $type);
+  }
+}
+
+//
+// v1.0
+//
+@mixin processing($type, $config, $themes: ()) {
+  @if $type == class {
+    // 4. @mixin class-processing
+    @include class-processing($config);
+  } @else if $type == modifiers {
+    // 2. @mixin modifier-processing
+    @include modifiers-processing($config);
+  } @else if $type == themes {
+    // 3. @mixin theme-processing
+    @include theme-processing($config, $themes);
+  } @else if $type == pseudo {
+    // 5. @mixin pseudo-processing
+    @include pseudo-processing($config);
+  }
+}
+
+//
+// v2.0
+//
+@mixin processing-new($config, $themes: ()) {
+  $first-2-letters: unquote(str-slice(nth(nth($config, 1), 1), 1, 2));
+  $first-element: nth(nth($config, 1), 1);
+  $pseudo-elements: $pseudo-elements;
+  $pseudo-classes: $pseudo-classes;
+
+  @if $themes != () {
+    // 3. @mixin theme-processing
+    @include theme-processing($config, $themes);
+  } @else {
+    @if index($pseudo-classes, $first-element) or
+      index($pseudo-elements, $first-element)
+    {
+      // 5. @mixin pseudo-processing
+      @include pseudo-processing($config);
+    } @else if
+      $first-2-letters ==
+      unquote('__') or
+      $first-2-letters ==
+      unquote('--')
+    {
+      // 2. @mixin modifier-processing
+      @include modifiers-processing($config);
+    } @else {
+      // 4. @mixin class-processing
+      @include class-processing($config);
+    }
+  }
+}
+
+//
+//v0.1
+//
+// ===MODIFIER PROCESSING===
+// 1.Config map
+// keys mast be
+// [a] __elements -> processed in class &__element
+// [b] --modifiers -> processed in class &--modifier
+// [1] with nested --modifiers / __elements
+// $config: (
+//  -first-lvl-element: (
+//    --modifier-class-name: (
+//      modifier-css-property: modifier-css-property-value,
+//      ...
+//    ),
+//   __element-class-name: (
+//      element-css-property: element-css-property-value,
+//      ...
+//    ),
+//  ...
+//  ),
+//  --first-lvl-modifier: (
+//    --modifier-class-name: (
+//      modifier-css-property: modifier-css-property-value,
+//      ...
+//    ),
+//    __element-class-name: (
+//      element-css-property: element-css-property-value,
+//      ...
+//    ),
+//  ..
+//  )
+// )
+// [2] just list of css properties
+// example
+// $config: (
+//  __element (
+//    css-property-1: css-property-value-1,
+//    css-property-2: css-property-value-2
+//    ...
+//  )
+// )
+
+// $config examples
+// $modifiers-for-man: (
+//   -heir: (
+//     color: black,
+//   ),
+//   -face: (
+//       --eyes: (
+//         color: blue,
+//         background-color: white,
+//       ),
+//       --nose: (
+//         height: 7cm,
+//         width: 3cm,
+//       ),
+//       --lips: (
+//         color: red,
+//       ),
+//     ),
+//   -hand: (
+//       --left: (
+//         text-align: left,
+//       ),
+//       --right: (
+//         text-align: right,
+//       ),
+//     ),
+// );
+//
+// $btn-sizes: (
+//   --lg: (
+//     height: 40px,
+//   ),
+//   --md: (
+//     height: 30px,
+//   ),
+//   --sm: (
+//     height: 20px,
+//   ),
+// );
+
+// 2. @mixin modifier-processing
+@mixin modifiers-processing($config) {
+  @each $item in $config {
+    $item-key: nth($item, 1);
+    $item-value: nth($item, 2);
+    // check if second element in $item is map
+    // (set of modifiers/css properties)
+    // and not css property value alone
+    @if type_of($item-value) == map {
+      $modifiers-map: $item-value;
+      // check if second element of list is map and not css property
+      // if yes -> we have inside __elements/--modifiers structure
+      // if no -> we have __elements/--modifiers with list of css properties
+      //
+      // Details: both structures
+      // (nested __elements/--modifiers or list of css properties)
+      // have the list as first item in $item-value
+      // <<
+      // ($--modifier-class-name: (modifier-css-property:
+      //                  modifier-css-property-value,..)
+      // >>
+      // <<
+      // (css-property-1: css-property-value-1,...)
+      // >>
+      // but the second element of this list is
+      // map if we have __elements/-modifiers structure
+      // ($modifier-property: modifier-property-value,..)
+      // css property value in another case
+      //
+      @include all-types-processing(
+        $item-key,
+        $item-value,
+        $modifiers-map,
+        modifiers
+      );
+      //
+    } @else {
+      // if in $config only smth like css properties
+      @warn 'css properties and not __elements/--modifiers on first level in $config NOT correct processing with this mixin';
+    }
+  }
+}
+
+//
+//v0.1
+//
+// ===THEME PROCESSING===
+// 1. Themes
+// Themes example
+// $themes: (
+//   // $theme-key: $theme-class-name
+//   theme-light: theme--light,
+//   theme-dark: theme--dark
+// );
+
+// 2.Config
+// first level keys must be
+// the same as in $themes map
+// than two types of $theme-key structures are possible:
+// [1] with nested __elements/--modifiers
+// $config: (
+//  $theme-key: (
+//    --modifier-class-name: (
+//      modifier-css-property: modifier-css-property-value,
+//      ...
+//    ),
+//    __element-class-name: (
+//      element-css-property: element-css-property-value,
+//      ...
+//    ),
+//  ...
+//  )
+// ...
+// )
+// [2] just list of css properties
+// example
+// $config: (
+//  $theme-key: (
+//    css-property-1: css-property-value-1,
+//    css-property-2: css-property-value-2
+//    ...
+//  )
+// )
+// elements/modifiers nested in [$first-lvl-key != $theme-keys] NOT processing
+// use @include modifiers-processing
+
+// $config example with themes, themes with modifiers
+// $config: (
+//   // [1]
+//   theme-light:
+//     (
+//       error: (
+//         background: #d82d2d,
+//         color: #666,
+//       ),
+//       success: (
+//         background: #52bf4a,
+//         color: #fff,
+//       ),
+//       warning: (
+//         background: #c23435,
+//         color: #fff,
+//       ),
+//     ),
+//   // [2]
+//   theme-dark:
+//     (
+//       background: #666,
+//       color: #fff,
+//     ),
+//   // modifiers in [modifiers != $theme-keys] NOT processing
+//   not-theme-key: (
+//     --error: (
+//         background: #d82d2d,
+//         color: #fff,
+//       ),
+//     ...
+//   )
+// );
+
+// 3. @mixin theme-processing
+@mixin theme-processing($config, $themes) {
+  @each $item in $config {
+    $item-key: nth($item, 1);
+    $item-value: nth($item, 2);
+    // check if second element in $item is map
+    // (set of modifiers/css properties)
+    // and not css property value alone
+    @if type_of($item-value) == map {
+      @if $themes != () {
+        // crete list of all $theme-keys
+        // to avoid looping in map $themes
+        // cause no @break supported to stop the loop
+        // and additional unwanted iterations will be done
+        $full-theme-keys-list: ();
+        @each $theme-key, $theme-class-name in $themes {
+          $full-theme-keys-list: append($full-theme-keys-list, $theme-key);
+        }
+        // check if first item in list $item (=$item-key)
+        // is exists in list $full-theme-keys-list
+        @if index($full-theme-keys-list, $item-key) {
+          // === THEME RELATED ===
+          $modifiers-map: $item-value;
+          $theme-class-name: map-get($themes, $item-key);
+          // check if second element of list is map and not css property
+          // if yes -> we have $theme-key structure with __elements/--modifiers
+          // if no -> we have $theme-key just list with css properties
+          //
+          // Details: both structures
+          // (nested __elements/--modifiers or list of css properties)
+          // have the list as first item in $item-value
+          // <<
+          // ($--modifier-class-name: (modifier-css-property:
+          //                  modifier-css-property-value,..)
+          // >>
+          // <<
+          // (css-property-1: css-property-value-1,...)
+          // >>
+          // but the second element of this list is
+          // map if we have __elements/-modifiers structure
+          // ($modifier-property: modifier-property-value,..)
+          // css property value in another case
+          //
+          @include all-types-processing(
+            $theme-class-name,
+            $item-value,
+            $modifiers-map,
+            themes
+          );
+          //
+        }
+      }
+    } @else {
+      // if in $config only smth like css properties
+      @warn 'css properties and not theme-names on first level in $config NOT correct processing with this mixin';
+    }
+  }
+}
+
+//
+//v0.1
+//
+// 4. @mixin class-processing
+@mixin class-processing($config) {
+  @each $item in $config {
+    $item-key: nth($item, 1);
+    $item-value: nth($item, 2);
+    // check if second element in $item is map
+    // (set of modifiers/css properties)
+    // and not css property value alone
+    @if type_of($item-value) == map {
+      $modifiers-map: $item-value;
+      // check if second element of list is map and not css property
+      // if yes -> we have inside __elements/--modifiers structure
+      // if no -> we have __elements/--modifiers with list of css properties
+      //
+      // Details: both structures
+      // (nested __elements/--modifiers or list of css properties)
+      // have the list as first item in $item-value
+      // <<
+      // ($--modifier-class-name: (modifier-css-property:
+      //                  modifier-css-property-value,..)
+      // >>
+      // <<
+      // (css-property-1: css-property-value-1,...)
+      // >>
+      // but the second element of this list is
+      // map if we have __elements/-modifiers structure
+      // ($modifier-property: modifier-property-value,..)
+      // css property value in another case
+      //
+      @include all-types-processing(
+        $item-key,
+        $item-value,
+        $modifiers-map,
+        class
+      );
+      //
+    } @else {
+      // if in $config only smth like css properties
+      @warn 'css properties and not classes on first level in $config NOT correct processing with this mixin';
+    }
+  }
+}
+
+//
+//v0.1
+//
+// 5. @mixin pseudo-processing
+@mixin pseudo-processing(
+  $config,
+  $pseudo-elements: $pseudo-elements,
+  $pseudo-classes: $pseudo-classes
+) {
+  @each $item in $config {
+    $item-key: nth($item, 1);
+    $item-value: nth($item, 2);
+    // check if second element in $item is map
+    // (set of modifiers/css properties)
+    // and not css property value alone
+    @if type_of($item-value) == map {
+      $pseudo-name: $item-key;
+      $pseudo-properties: $item-value;
+      // check if in $pseudo-* lists
+      @if index($pseudo-classes, $pseudo-name) {
+        @include list-processing(
+          $pseudo-name,
+          $pseudo-properties,
+          pseudo-class
+        );
+      } @else if index($pseudo-elements, $pseudo-name) {
+        @include list-processing(
+          $pseudo-name,
+          $pseudo-properties,
+          pseudo-element
+        );
+      }
+    } @else {
+      @warn 'css properties and not pseudo-elements/classes on first level in $config NOT correct processing with this mixin';
+    }
+  }
+}
