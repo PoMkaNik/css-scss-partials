@@ -17,3 +17,9 @@ body {
   font-size: map-get($font, size);
   line-height: map-get($font, line-height);
 }
+
+/// Google Font Import
+@mixin google-font($font-name) {
+  $font: unquote($font-name);
+  @import url(https://fonts.googleapis.com/css?family=#{$font});
+}
